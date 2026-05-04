@@ -53,8 +53,11 @@ anchor deploy --provider.cluster devnet
 ```bash
 cd x402
 npm install
-npm start
+cp .env.example .env   # set SVM_ADDRESS to your Solana wallet
+npm run server
 ```
+
+The server uses the [PayAI facilitator](https://facilitator.payai.network) for payment verification — no manual on-chain verification needed.
 
 ### 3. Start the oracle
 
@@ -78,7 +81,10 @@ npm run dev
 |---|---|---|
 | `SOLANA_NETWORK` | Solana cluster | `devnet` |
 | `SOLANA_RPC_URL` | Custom RPC endpoint | Solana public devnet |
-| `X402_SERVER_URL` | x402 payment server URL | `http://localhost:3402` |
+| `SVM_ADDRESS` | Solana wallet to receive x402 payments (server) | — |
+| `SVM_PRIVATE_KEY` | Base58 Solana private key for x402 payments (client/agent) | — |
+| `VITE_X402_SERVER_URL` | x402 payment server URL (frontend) | `http://localhost:3402` |
+| `VITE_AGENT_PRIVATE_KEY` | Base58 Solana private key for browser x402 demo | — |
 
 ## License
 

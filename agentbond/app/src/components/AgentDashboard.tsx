@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { AnchorProvider } from "@coral-xyz/anchor";
-import { PublicKey, SystemProgram, LAMPORTS_PER_SOL, Transaction } from "@solana/web3.js";
+import { PublicKey, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { x402Client, wrapFetchWithPayment } from "@x402/fetch";
+import { registerExactSvmScheme } from "@x402/svm/exact/client";
+import { createKeyPairSignerFromBytes } from "@solana/kit";
+import { base58 } from "@scure/base";
 import {
   useAgentBondProgram,
   getTaskPDA,
@@ -12,7 +15,7 @@ import {
   type AgentProfileAccount,
 } from "../program/AgentBondProgram";
 
-const X402_SERVER_URL = process.env.X402_SERVER_URL ?? "http://localhost:3402";
+const X402_SERVER_URL = import.meta.env.VITE_X402_SERVER_URL ?? "http://localhost:3402";
 
 export function AgentDashboard() {
   const { publicKey, connected } = useWallet();
@@ -86,61 +89,26 @@ export function AgentDashboard() {
     setError(null);
 
     try {
-      // Step 1: Get task brief via x402
-      const quoteRes = await fetch(`${X402_SERVER_URL}/task-brief/${task.taskId}`);
-      if (quoteRes.status !== 402) {
-        throw new Error(`Expected 402, got ${quoteRes.status}`);
+      // Build x402 fetch client using the wallet adapter's private key from env
+      // (In production, agents run server-side with a keypair; browser demo uses VITE_AGENT_PRIVATE_KEY)
+      const agentPrivateKey = import.meta.env.VITE_AGENT_PRIVATE_KEY as string;
+      if (!agentPrivateKey) throw new Error("Set VITE_AGENT_PRIVATE_KEY in .env to use x402");
+
+      const svmSigner = await createKeyPairSignerFromBytes(base58.decode(agentPrivateKey));
+      const client = new x402Client();
+      registerExactSvmScheme(client, { signer: svmSigner });
+      const fetchWithPayment = wrapFetchWithPayment(fetch, client);
+
+      // x402: fetch task brief — payment handled automatically
+      const res = await fetchWithPayment(`${X402_SERVER_URL}/task-brief/${task.taskId}`);
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(`x402 request failed: ${JSON.stringify(err)}`);
       }
-
-      const quote = await quoteRes.json();
-      const paymentReq = quote.accepts?.[0];
-      if (!paymentReq) throw new Error("No payment requirements found");
-
-      const recipient = new PublicKey(paymentReq.payTo);
-      const amount = parseInt(paymentReq.maxAmountRequired);
-
-      console.log(`x402: Paying ${amount} lamports to ${recipient.toBase58()}`);
-
-      // Step 2: Create and sign the payment transaction
-      const { blockhash } = await program!.provider.connection.getLatestBlockhash();
-      const tx = new Transaction({
-        feePayer: publicKey!,
-        recentBlockhash: blockhash,
-      });
-
-      tx.add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey!,
-          toPubkey: recipient,
-          lamports: amount,
-        })
-      );
-
-      const signedTx = await (program!.provider as AnchorProvider).wallet.signTransaction(tx);
-      const serializedTx = signedTx.serialize().toString("base64");
-
-      const paymentProof = {
-        x402Version: 1,
-        scheme: "exact",
-        network: "solana-devnet",
-        payload: { serializedTransaction: serializedTx },
-      };
-      const xPaymentHeader = Buffer.from(JSON.stringify(paymentProof)).toString("base64");
-
-      // Step 3: Retry with X-Payment header
-      const paidRes = await fetch(`${X402_SERVER_URL}/task-brief/${task.taskId}`, {
-        headers: { "X-Payment": xPaymentHeader },
-      });
-
-      if (!paidRes.ok) {
-        const err = await paidRes.json();
-        throw new Error(`x402 payment failed: ${JSON.stringify(err)}`);
-      }
-
-      const { data } = await paidRes.json();
+      const { data } = await res.json();
       console.log("x402: Task brief received", data);
 
-      // Step 4: Call accept_task on-chain
+      // Call accept_task on-chain
       const [taskPda] = getTaskPDA(operator, Number(task.taskId));
       const [bondVaultPda] = getBondVaultPDA(taskPda);
       const [agentProfilePda] = getAgentProfilePDA(publicKey!);
