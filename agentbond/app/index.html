@@ -8,6 +8,11 @@
   </head>
   <body>
     <div id="root"></div>
+    <script type="module">
+      import { Buffer } from '/node_modules/buffer/index.js';
+      globalThis.Buffer = Buffer;
+      window.Buffer = Buffer;
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

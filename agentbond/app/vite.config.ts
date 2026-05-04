@@ -3,25 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    {
-      name: 'buffer-polyfill',
-      transformIndexHtml() {
-        return [
-          {
-            tag: 'script',
-            attrs: { type: 'module' },
-            children: `
-              import { Buffer } from '/node_modules/buffer/index.js';
-              globalThis.Buffer = Buffer;
-            `,
-            injectTo: 'head-prepend',
-          },
-        ]
-      },
-    },
-  ],
+  plugins: [react()],
   define: {
     'process.env': {},
     global: 'globalThis',
