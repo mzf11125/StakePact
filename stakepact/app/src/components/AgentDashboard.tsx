@@ -6,20 +6,20 @@ import { registerExactSvmScheme } from "@x402/svm/exact/client";
 import { createKeyPairSignerFromBytes } from "@solana/kit";
 import { base58 } from "@scure/base";
 import {
-  useAgentBondProgram,
+  useStakePactProgram,
   getTaskPDA,
   getBondVaultPDA,
   getAgentProfilePDA,
   getTaskStatus,
   type TaskAccount,
   type AgentProfileAccount,
-} from "../program/AgentBondProgram";
+} from "../program/StakePactProgram";
 
 const X402_SERVER_URL = import.meta.env.VITE_X402_SERVER_URL ?? "http://localhost:3402";
 
 export function AgentDashboard() {
   const { publicKey, connected } = useWallet();
-  const program = useAgentBondProgram();
+  const program = useStakePactProgram();
   const [openTasks, setOpenTasks] = useState<TaskAccount[]>([]);
   const [myAcceptedTasks, setMyAcceptedTasks] = useState<TaskAccount[]>([]);
   const [profile, setProfile] = useState<AgentProfileAccount | null>(null);

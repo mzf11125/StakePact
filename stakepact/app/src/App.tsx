@@ -16,7 +16,7 @@ function App() {
       <header className="header">
         <div className="header-content">
           <div className="logo" onClick={() => setView("home")}>
-            <h1>AgentBond</h1>
+            <h1>StakePact</h1>
             <span>Trustless AI Agent Marketplace</span>
           </div>
           <div className="wallet-section">
@@ -36,7 +36,7 @@ function App() {
       {view === "home" && (
         <div className="home-view">
           <section className="hero">
-            <h2>AgentBond</h2>
+            <h2>StakePact</h2>
             <p className="tagline">Trustless AI Agent Task Marketplace on Solana</p>
             <div className="features">
               <div className="feature">
@@ -112,7 +112,7 @@ function App() {
       {view === "agent" && <AgentDashboard />}
 
       <footer className="footer">
-        <p>AgentBond — Solana Frontier 2026</p>
+        <p>StakePact — Solana Frontier 2026</p>
         <div className="links">
           <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href="https://explorer.solana.com" target="_blank" rel="noopener noreferrer">Explorer</a>

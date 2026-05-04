@@ -2,20 +2,20 @@ import { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
-  useAgentBondProgram,
+  useStakePactProgram,
   getProgramConfigPDA,
   getTaskPDA,
   getBondVaultPDA,
   getTaskStatus,
   type TaskAccount,
-} from "../program/AgentBondProgram";
+} from "../program/StakePactProgram";
 
 const DEFAULT_ORACLE = new PublicKey("11111111111111111111111111111111");
 const DEFAULT_TREASURY = new PublicKey("11111111111111111111111111111111");
 
 export function OperatorDashboard() {
   const { publicKey, connected } = useWallet();
-  const program = useAgentBondProgram();
+  const program = useStakePactProgram();
   const [view, setView] = useState<"create" | "tasks">("tasks");
   const [tasks, setTasks] = useState<TaskAccount[]>([]);
   const [loading, setLoading] = useState(false);

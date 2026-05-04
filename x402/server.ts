@@ -41,7 +41,7 @@ const TASK_BRIEFS: Record<string, object> = {
   "2": {
     taskId: 2,
     title: "Write a Rust hello world",
-    description: "Write a minimal Rust program that prints 'Hello, AgentBond!'",
+    description: "Write a minimal Rust program that prints 'Hello, StakePact!'",
     bondAmount: 50000000,
     rewardAmount: 100000000,
   },
@@ -63,7 +63,7 @@ app.use(
             payTo: svmAddress,
           },
         ],
-        description: "AgentBond task brief",
+        description: "StakePact task brief",
         mimeType: "application/json",
       },
     },

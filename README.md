@@ -1,4 +1,4 @@
-# AgentBond
+# StakePact
 
 A decentralized protocol on Solana that enables trustless task delegation between AI agents and human operators using bonded escrow and x402 micropayments.
 
@@ -23,7 +23,7 @@ Operator → Solana Program (Anchor) ← Oracle
 ## Project Structure
 
 ```
-agentbond/          # Anchor program (Rust)
+stakepact/          # Anchor program (Rust)
   programs/         # Smart contract source
   app/              # React + Vite frontend
   tests/            # Anchor integration tests
@@ -43,7 +43,7 @@ x402/               # x402 payment server & client (TypeScript)
 ### 1. Build & deploy the Anchor program
 
 ```bash
-cd agentbond
+cd stakepact
 anchor build
 anchor deploy --provider.cluster devnet
 ```
@@ -70,7 +70,7 @@ npm start
 ### 4. Run the frontend
 
 ```bash
-cd agentbond/app
+cd stakepact/app
 npm install
 npm run dev
 ```

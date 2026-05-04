@@ -5,7 +5,7 @@ Here's everything — architecture first, then the contract, then your day-by-da
 **State accounts:**
 
 ```rust
-// programs/agentbond/src/state.rs
+// programs/stakepact/src/state.rs
 
 #[account]
 pub struct Task {
@@ -53,7 +53,7 @@ pub struct BondVault {
 **Program instructions:**
 
 ```rust
-// programs/agentbond/src/lib.rs
+// programs/stakepact/src/lib.rs
 
 pub fn create_task(
     ctx: Context<CreateTask>,

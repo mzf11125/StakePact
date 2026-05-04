@@ -6,7 +6,10 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-agentbond = "82CcH55vDyFmZQC96gEPPEcWFSidKvBm92zdo7e8Xu13"
+stakepact = "82CcH55vDyFmZQC96gEPPEcWFSidKvBm92zdo7e8Xu13"
+
+[programs.devnet]
+stakepact = "82CcH55vDyFmZQC96gEPPEcWFSidKvBm92zdo7e8Xu13"
 
 [registry]
 url = "https://api.apr.dev"

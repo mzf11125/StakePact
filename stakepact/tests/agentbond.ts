@@ -1,10 +1,10 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program, BN } from "@coral-xyz/anchor";
-import { Agentbond } from "../target/types/agentbond";
+import { Agentbond } from "../target/types/stakepact";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram } from "@solana/web3.js";
 import { assert } from "chai";
 
-describe("agentbond", () => {
+describe("stakepact", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
   const program = anchor.workspace.Agentbond as Program<Agentbond>;

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum AgentBondError {
+pub enum StakePactError {
     #[msg("Task is not in the expected status")]
     InvalidStatus,
     #[msg("Deadline has not passed yet")]

@@ -4,13 +4,13 @@ use anchor_lang::system_program;
 mod errors;
 mod state;
 
-use errors::AgentBondError;
+use errors::StakePactError;
 use state::*;
 
 declare_id!("82CcH55vDyFmZQC96gEPPEcWFSidKvBm92zdo7e8Xu13");
 
 #[program]
-pub mod agentbond {
+pub mod stakepact {
     use super::*;
 
     pub fn initialize_config(
@@ -34,7 +34,7 @@ pub mod agentbond {
         deadline: i64,
     ) -> Result<()> {
         let clock = Clock::get()?;
-        require!(deadline > clock.unix_timestamp, AgentBondError::DeadlinePassed);
+        require!(deadline > clock.unix_timestamp, StakePactError::DeadlinePassed);
 
         let task = &mut ctx.accounts.task;
         task.task_id = task_id;
@@ -72,8 +72,8 @@ pub mod agentbond {
         let clock = Clock::get()?;
         let task = &mut ctx.accounts.task;
 
-        require!(task.status == TaskStatus::Open, AgentBondError::InvalidStatus);
-        require!(clock.unix_timestamp < task.deadline, AgentBondError::DeadlinePassed);
+        require!(task.status == TaskStatus::Open, StakePactError::InvalidStatus);
+        require!(clock.unix_timestamp < task.deadline, StakePactError::DeadlinePassed);
 
         // Transfer bond from agent into vault
         system_program::transfer(
@@ -107,7 +107,7 @@ pub mod agentbond {
         result_hash: [u8; 32],
     ) -> Result<()> {
         let task = &mut ctx.accounts.task;
-        require!(task.status == TaskStatus::Accepted, AgentBondError::InvalidStatus);
+        require!(task.status == TaskStatus::Accepted, StakePactError::InvalidStatus);
 
         task.result_hash = result_hash;
         task.status = TaskStatus::Submitted;
@@ -120,10 +120,10 @@ pub mod agentbond {
         quality_score: u8,
         passed: bool,
     ) -> Result<()> {
-        require!(quality_score <= 100, AgentBondError::InvalidScore);
+        require!(quality_score <= 100, StakePactError::InvalidScore);
 
         let task = &mut ctx.accounts.task;
-        require!(task.status == TaskStatus::Submitted, AgentBondError::InvalidStatus);
+        require!(task.status == TaskStatus::Submitted, StakePactError::InvalidStatus);
 
         task.quality_score = quality_score;
 
@@ -170,8 +170,8 @@ pub mod agentbond {
         let clock = Clock::get()?;
         let task = &mut ctx.accounts.task;
 
-        require!(task.status == TaskStatus::Accepted, AgentBondError::InvalidStatus);
-        require!(clock.unix_timestamp > task.deadline, AgentBondError::DeadlineNotPassed);
+        require!(task.status == TaskStatus::Accepted, StakePactError::InvalidStatus);
+        require!(clock.unix_timestamp > task.deadline, StakePactError::DeadlineNotPassed);
 
         let vault_lamports = ctx.accounts.bond_vault.to_account_info().lamports();
         **ctx.accounts.bond_vault.to_account_info().try_borrow_mut_lamports()? -= vault_lamports;

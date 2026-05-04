@@ -2,12 +2,12 @@ import { AnchorProvider, Program } from "@coral-xyz/anchor";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useMemo } from "react";
-import IDL from "./agentbond.json";
+import IDL from "./stakepact.json";
 
 const PROGRAM_ID = new PublicKey("82CcH55vDyFmZQC96gEPPEcWFSidKvBm92zdo7e8Xu13");
 const DEFAULT_RPC = (import.meta.env?.VITE_SOLANA_RPC_URL as string) ?? "https://api.devnet.solana.com";
 
-export const useAgentBondProgram = () => {
+export const useStakePactProgram = () => {
   const { publicKey, signTransaction, signAllTransactions } = useWallet();
 
   const program = useMemo(() => {

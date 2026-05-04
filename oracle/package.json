@@ -1,5 +1,5 @@
 {
-  "name": "agentbond-oracle",
+  "name": "stakepact-oracle",
   "version": "1.0.0",
   "private": true,
   "scripts": { "start": "ts-node oracle.ts" },

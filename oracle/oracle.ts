@@ -1,13 +1,13 @@
 #!/usr/bin/env ts-node
 /**
- * AgentBond Judge Oracle
+ * StakePact Judge Oracle
  * Usage: ts-node oracle.ts <task_pubkey>
  *
  * Env vars required:
  *   ORACLE_KEYPAIR_PATH  - path to oracle keypair JSON (default: ~/.config/solana/id.json)
  *   ANTHROPIC_API_KEY    - Claude API key
  *   RPC_URL              - Solana RPC (default: devnet)
- *   PROGRAM_ID           - AgentBond program ID
+ *   PROGRAM_ID           - StakePact program ID
  */
 
 import * as anchor from "@coral-xyz/anchor";
@@ -71,7 +71,7 @@ async function main() {
   const connection = new Connection(RPC_URL, "confirmed");
 
   // Load IDL
-  const idlPath = path.join(__dirname, "../agentbond/target/idl/agentbond.json");
+  const idlPath = path.join(__dirname, "../stakepact/target/idl/stakepact.json");
   const idl = JSON.parse(fs.readFileSync(idlPath, "utf-8"));
 
   const wallet = new anchor.Wallet(oracleKeypair);
