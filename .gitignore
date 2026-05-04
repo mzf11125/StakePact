@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.yarn/
+
+# Build outputs
+dist/
+build/
+target/
+
+# Anchor
+.anchor/test-ledger/
+agentbond/.anchor/test-ledger/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Vite cache
+node_modules/.vite/
+
+# Solana keypairs
+*.json
+!package.json
+!tsconfig*.json
+!Anchor.toml
+!agentbond/app/package.json
+!agentbond/app/tsconfig*.json
+!agentbond/package.json
+!agentbond/tsconfig.json
+!oracle/package.json
+!oracle/tsconfig.json
+!x402/package.json
+!x402/tsconfig.json
+!skills-lock.json
+
+# Rust
+agentbond/Cargo.lock
