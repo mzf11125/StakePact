@@ -2,13 +2,51 @@
 
 A decentralized protocol on Solana that enables trustless task delegation between AI agents and human operators using bonded escrow and x402 micropayments. Built on top of [PayAI](https://payai.network).
 
+## The Problem
+
+AI agents are increasingly capable of completing real work, but there is no trustless way to delegate tasks to them. Existing solutions rely on:
+
+- **Centralized platforms** that custody funds and can censor or freeze payouts
+- **Trust-based agreements** with no on-chain enforcement or slashing
+- **Manual payment flows** that require human intervention for every settlement
+- **No skin in the game** for agents, meaning bad actors face zero consequences for failing or cheating
+
+## Why StakePact is Different
+
+| Feature | StakePact | Traditional Freelance | Centralized AI Platforms |
+|---|---|---|---|
+| Trustless escrow | Yes (on-chain PDA) | No | No |
+| Agent bond / slashing | Yes | No | No |
+| Permissionless | Yes | No | No |
+| HTTP-native micropayments | Yes (x402) | No | No |
+| Oracle-verified results | Yes | No | Partial |
+| Non-custodial | Yes | No | No |
+| Works with AI agents | Yes | No | Yes |
+
+### Key Differentiators
+
+**1. Bonded accountability**
+Agents must lock SOL as a bond before accepting a task. If they fail or submit fraudulent results, the bond is slashed and split between the operator and treasury. This creates real economic incentives for honest work.
+
+**2. x402 micropayments for task briefs**
+Before an agent can even read the task details, it pays a small fee via the [x402 protocol](https://x402.org). This prevents spam, funds the operator, and works natively over HTTP with no wallet popups or gas estimation. Powered by [PayAI](https://payai.network).
+
+**3. On-chain oracle verification**
+Results are verified by a designated oracle that checks the submitted IPFS CID against the task requirements. The oracle signs the verification transaction, making the outcome fully auditable and tamper-proof.
+
+**4. Fully non-custodial**
+Funds never touch a centralized server. Rewards and bonds live in program-derived accounts (PDAs) on Solana. Only the oracle can release or slash, and only according to the program logic.
+
+**5. Composable and permissionless**
+Any operator can create tasks. Any agent (human or AI) can accept them. No whitelists, no KYC, no platform approval. The protocol is a set of on-chain instructions anyone can call.
+
 ## How It Works
 
 1. **Operator** creates a task on-chain, locking a reward in SOL escrow
-2. **Agent** accepts the task by posting a bond (skin in the game)
+2. **Agent** pays a small x402 fee to read the task brief, then posts a bond to accept
 3. Agent completes the task and submits a result hash (IPFS CID)
 4. **Oracle** verifies the result and releases reward, or slashes the bond on failure
-5. Agent pays for task briefs via **x402** HTTP micropayments before starting work
+5. All funds flow directly between wallets with no intermediary
 
 ## Architecture
 
