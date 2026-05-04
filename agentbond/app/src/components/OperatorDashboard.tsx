@@ -75,7 +75,10 @@ export function OperatorDashboard() {
   }
 
   async function initializeConfig() {
-    if (!publicKey || !program) return;
+    if (!publicKey || !program) {
+      setError("Wallet not connected or program not loaded. Try reconnecting your wallet.");
+      return;
+    }
     setLoading(true);
     setError(null);
 
@@ -92,7 +95,13 @@ export function OperatorDashboard() {
       setTxSig(tx);
       setConfigInitialized(true);
     } catch (e: any) {
-      setError(e.message);
+      // Already initialized is fine
+      if (e.message?.includes("already in use") || e.message?.includes("0x0")) {
+        setConfigInitialized(true);
+      } else {
+        setError(`Initialize failed: ${e.message}`);
+        console.error(e);
+      }
     } finally {
       setLoading(false);
     }
