@@ -12,7 +12,7 @@ agentbond = "82CcH55vDyFmZQC96gEPPEcWFSidKvBm92zdo7e8Xu13"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
