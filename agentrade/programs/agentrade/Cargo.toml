@@ -20,5 +20,5 @@ init-if-needed = ["anchor-lang/init-if-needed"]
 
 [dependencies]
 anchor-lang = { version = "0.31.0", features = ["init-if-needed"] }
-pyth-solana-receiver-sdk = { version = "1.1.0", features = ["cpi"] }
+pyth-solana-receiver-sdk = { version = "1.1.0" }
 

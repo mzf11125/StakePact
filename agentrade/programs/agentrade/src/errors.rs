@@ -20,5 +20,11 @@ pub enum AgenTradeError {
     InvalidPythFeed,
     #[msg("Pyth price is stale (older than 60 seconds)")]
     StalePythPrice,
+    #[msg("Challenge window has not expired yet")]
+    ChallengeWindowOpen,
+    #[msg("Challenge window has already expired")]
+    ChallengeWindowExpired,
+    #[msg("Task has already been disputed")]
+    AlreadyDisputed,
 }
 
