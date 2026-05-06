@@ -9,7 +9,7 @@
  * Env vars:
  *   SVM_PRIVATE_KEY     - Base58 Solana private key of the paying agent
  *   RPC_URL             - Solana RPC (default: devnet)
- *   PROGRAM_ID          - StakePact program ID
+ *   PROGRAM_ID          - AgenTrade program ID
  *   X402_SERVER_URL     - x402 server base URL (default: http://localhost:3402)
  */
 
@@ -86,7 +86,7 @@ async function main() {
     PROGRAM_ID
   );
 
-  const idlPath = path.join(__dirname, "../stakepact/target/idl/stakepact.json");
+  const idlPath = path.join(__dirname, "../agentrade/target/idl/agentrade.json");
   const idl = JSON.parse(fs.readFileSync(idlPath, "utf-8"));
   const wallet = new anchor.Wallet(agentKeypair);
   const provider = new anchor.AnchorProvider(connection, wallet, {});

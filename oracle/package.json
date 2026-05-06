@@ -1,5 +1,5 @@
 {
-  "name": "stakepact-oracle",
+  "name": "agentrade-oracle",
   "version": "1.0.0",
   "private": true,
   "scripts": { "start": "ts-node oracle.ts" },

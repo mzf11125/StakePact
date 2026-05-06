@@ -1,67 +1,69 @@
-# StakePact
+# AgenTrade — agentrade.co
 
-A decentralized protocol on Solana that enables trustless task delegation between AI agents and human operators using bonded escrow and x402 micropayments. Built on top of [PayAI](https://payai.network).
+Bonded AI trade agents for ASEAN commodity exporters on Solana. Agents post SOL as a bond, execute trade tasks (price discovery, document verification, logistics coordination), and get slashed for failures. Built on [PayAI](https://payai.network) x402.
 
 ## The Problem
 
-AI agents are increasingly capable of completing real work, but there is no trustless way to delegate tasks to them. Existing solutions rely on:
+$2.4T in ASEAN commodity trade — palm oil, rubber, coffee, rice — is still coordinated over WhatsApp and paper. AI agents can automate this, but operators have no trustless way to hold agents accountable. If an agent submits a wrong price quote or a fraudulent shipping document, there is no on-chain consequence.
 
-- **Centralized platforms** that custody funds and can censor or freeze payouts
-- **Trust-based agreements** with no on-chain enforcement or slashing
-- **Manual payment flows** that require human intervention for every settlement
-- **No skin in the game** for agents, meaning bad actors face zero consequences for failing or cheating
+Existing solutions fail because:
 
-## Why StakePact is Different
+- **Centralized platforms** custody funds and can censor payouts
+- **Trust-based agreements** have no on-chain enforcement or slashing
+- **Manual payment flows** require human intervention for every settlement
+- **No skin in the game** — agents face zero consequences for bad work
 
-| Feature | StakePact | Traditional Freelance | Centralized AI Platforms |
+## How AgenTrade Works
+
+1. **Operator** (exporter) creates a trade task on-chain, locking a SOL reward in escrow
+2. **Agent** pays a small x402 fee to read the task brief, then posts a SOL bond to accept
+3. Agent completes the task (price check, doc verification, logistics quote) and submits result hash (IPFS CID)
+4. **Oracle** verifies the result and releases reward + bond to agent, or slashes the bond on failure
+5. All funds flow directly between wallets — no intermediary, no custody
+
+## Why AgenTrade is Different
+
+| Feature | AgenTrade | Traditional Freelance | Centralized AI Platforms |
 |---|---|---|---|
 | Trustless escrow | Yes (on-chain PDA) | No | No |
 | Agent bond / slashing | Yes | No | No |
-| Permissionless | Yes | No | No |
+| ASEAN trade vertical | Yes | No | No |
 | HTTP-native micropayments | Yes (x402) | No | No |
 | Oracle-verified results | Yes | No | Partial |
 | Non-custodial | Yes | No | No |
-| Works with AI agents | Yes | No | Yes |
+| Permissionless | Yes | No | No |
 
-### Key Differentiators
+## Key Differentiators
 
 **1. Bonded accountability**
-Agents must lock SOL as a bond before accepting a task. If they fail or submit fraudulent results, the bond is slashed and split between the operator and treasury. This creates real economic incentives for honest work.
+Agents lock SOL before accepting any trade task. Bad result = bond slashed, split between operator and treasury. Real economic skin in the game.
 
-**2. x402 micropayments for task briefs**
-Before an agent can even read the task details, it pays a small fee via the [x402 protocol](https://x402.org). This prevents spam, funds the operator, and works natively over HTTP with no wallet popups or gas estimation. Powered by [PayAI](https://payai.network).
+**2. x402 micropayments**
+Agents pay per task brief via [x402 protocol](https://x402.org) — no wallet popups, no gas estimation, works natively over HTTP. Powered by [PayAI](https://payai.network).
 
 **3. On-chain oracle verification**
-Results are verified by a designated oracle that checks the submitted IPFS CID against the task requirements. The oracle signs the verification transaction, making the outcome fully auditable and tamper-proof.
+A designated oracle checks submitted IPFS CIDs against task requirements and signs the verification transaction. Fully auditable, tamper-proof.
 
-**4. Fully non-custodial**
-Funds never touch a centralized server. Rewards and bonds live in program-derived accounts (PDAs) on Solana. Only the oracle can release or slash, and only according to the program logic.
+**4. ASEAN trade vertical**
+Built for the actual workflows ASEAN commodity exporters run today: price discovery, bill of lading verification, logistics coordination, customs document checks. Not abstract "tasks" — real trade operations.
 
 **5. Composable and permissionless**
-Any operator can create tasks. Any agent (human or AI) can accept them. No whitelists, no KYC, no platform approval. The protocol is a set of on-chain instructions anyone can call.
-
-## How It Works
-
-1. **Operator** creates a task on-chain, locking a reward in SOL escrow
-2. **Agent** pays a small x402 fee to read the task brief, then posts a bond to accept
-3. Agent completes the task and submits a result hash (IPFS CID)
-4. **Oracle** verifies the result and releases reward, or slashes the bond on failure
-5. All funds flow directly between wallets with no intermediary
+Any operator can post tasks. Any agent can accept them. No whitelists, no KYC, no platform approval.
 
 ## Architecture
 
 ```
-Operator -> Solana Program (Anchor) <- Oracle
-                  |
-            Bond Vault (PDA)
-                  |
-           Agent <- x402 Server (PayAI)
+Operator (Exporter) -> Solana Program (Anchor) <- Oracle
+                              |
+                        Bond Vault (PDA)
+                              |
+                  Trade Agent <- x402 Server (PayAI)
 ```
 
 ## Project Structure
 
 ```
-stakepact/          # Anchor program (Rust)
+agentrade/          # Anchor program (Rust)
   programs/         # Smart contract source
   app/              # React + Vite frontend
   tests/            # Anchor integration tests
@@ -69,19 +71,12 @@ oracle/             # Oracle service (TypeScript)
 x402/               # x402 payment server and client (TypeScript)
 ```
 
-## Prerequisites
-
-- [Rust](https://rustup.rs/)
-- [Solana CLI](https://docs.solana.com/cli/install-solana-cli-tools)
-- [Anchor](https://www.anchor-lang.com/docs/installation)
-- Node.js 18+
-
 ## Getting Started
 
 ### 1. Build and deploy the Anchor program
 
 ```bash
-cd stakepact
+cd agentrade
 anchor build
 anchor deploy --provider.cluster devnet
 ```
@@ -95,8 +90,6 @@ cp .env.example .env   # set SVM_ADDRESS to your Solana wallet
 npm run server
 ```
 
-Payment verification is handled by the [PayAI facilitator](https://facilitator.payai.network). No manual on-chain verification needed.
-
 ### 3. Start the oracle
 
 ```bash
@@ -108,7 +101,7 @@ npm start
 ### 4. Run the frontend
 
 ```bash
-cd stakepact/app
+cd agentrade/app
 npm install
 npm run dev
 ```
@@ -126,10 +119,10 @@ npm run dev
 
 ## Built With
 
-- [Solana](https://solana.com) + [Anchor](https://anchor-lang.com) for the on-chain program
-- [PayAI](https://payai.network) for x402 micropayment infrastructure
-- [x402](https://x402.org) protocol for HTTP-native payments
-- [React](https://react.dev) + [Vite](https://vitejs.dev) for the frontend
+- [Solana](https://solana.com) + [Anchor](https://anchor-lang.com) — on-chain program
+- [PayAI](https://payai.network) — x402 micropayment infrastructure
+- [x402](https://x402.org) — HTTP-native agent payments
+- [React](https://react.dev) + [Vite](https://vitejs.dev) — frontend
 
 ## License
 

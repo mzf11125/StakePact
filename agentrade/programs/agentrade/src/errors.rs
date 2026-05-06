@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum StakePactError {
+pub enum AgenTradeError {
     #[msg("Task is not in the expected status")]
     InvalidStatus,
     #[msg("Deadline has not passed yet")]
