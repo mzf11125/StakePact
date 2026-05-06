@@ -1,5 +1,7 @@
 # AgenTrade — agentrade.co
 
+> **AgenTrade is the accountability layer for AI trade agents — bonded escrow and oracle-verified slashing for ASEAN commodity exporters on Solana.**
+
 Bonded AI trade agents for ASEAN commodity exporters on Solana. Agents post SOL as a bond, execute trade tasks (price discovery, document verification, logistics coordination), and get slashed for failures. Built on [PayAI](https://payai.network) x402.
 
 ## The Problem
@@ -127,3 +129,16 @@ npm run dev
 ## License
 
 MIT
+
+---
+
+## Validation Scorecard
+
+| Framework | Score | Blocker |
+|-----------|-------|---------|
+| Startup Ideation | ✅ Pass | None |
+| AI Product Strategy | ⚠️ Conditional | Oracle centralization, partial credit |
+| PMF | ⚠️ Conditional | Need 1 named real operator |
+| Founder Sales | ⚠️ Action needed | Post in Superteam Indonesia today |
+| Shipping | ✅ Pass | Demo video is the only blocker |
+| Product Vision | ⚠️ Needs rewrite | Too feature-focused |
