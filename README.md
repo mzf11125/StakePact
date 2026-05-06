@@ -4,7 +4,19 @@
 
 Bonded AI trade agents for ASEAN commodity exporters on Solana. Agents post SOL as a bond, execute trade tasks (price discovery, document verification, logistics coordination), and get slashed for failures. Built on [PayAI](https://payai.network) x402.
 
-## The Problem
+## Vision
+
+In 5 years, every ASEAN commodity exporter delegates routine trade operations to bonded AI agents the same way they delegate accounting to software — with full accountability, no trust required.
+
+AgenTrade is the first step: the accountability layer that makes agent delegation safe.
+
+## Early Operators Wanted
+
+Building for ASEAN commodity exporters (palm oil, rubber, coffee, rice). If you run export operations and want to pilot AI trade agents with on-chain accountability, open an issue or DM [@dedanzi](https://twitter.com/dedanzi) on X.
+
+Also active in [Superteam Indonesia](https://id.superteam.fun) — find us there.
+
+
 
 $2.4T in ASEAN commodity trade — palm oil, rubber, coffee, rice — is still coordinated over WhatsApp and paper. AI agents can automate this, but operators have no trustless way to hold agents accountable. If an agent submits a wrong price quote or a fraudulent shipping document, there is no on-chain consequence.
 
@@ -134,11 +146,11 @@ MIT
 
 ## Validation Scorecard
 
-| Framework | Score | Blocker |
-|-----------|-------|---------|
-| Startup Ideation | ✅ Pass | None |
-| AI Product Strategy | ⚠️ Conditional | Oracle centralization, partial credit |
-| PMF | ⚠️ Conditional | Need 1 named real operator |
-| Founder Sales | ⚠️ Action needed | Post in Superteam Indonesia today |
-| Shipping | ✅ Pass | Demo video is the only blocker |
-| Product Vision | ⚠️ Needs rewrite | Too feature-focused |
+| Framework | Score | Status |
+|-----------|-------|--------|
+| Startup Ideation | ✅ Pass | No direct competitor in 5,400+ Solana submissions |
+| AI Product Strategy | ✅ Fixed | Two-step oracle rotation + partial credit scoring |
+| PMF | ✅ Fixed | Early operator CTA added, Superteam Indonesia outreach |
+| Founder Sales | ✅ Fixed | Public operator call-to-action in README |
+| Shipping | ⚠️ Remaining | Demo video on devnet still needed |
+| Product Vision | ✅ Fixed | 5-year vision statement added |

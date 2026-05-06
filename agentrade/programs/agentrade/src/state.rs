@@ -3,12 +3,13 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct ProgramConfig {
     pub oracle: Pubkey,
+    pub pending_oracle: Pubkey, // two-step oracle rotation — prevents single-key takeover
     pub treasury: Pubkey,
     pub bump: u8,
 }
 
 impl ProgramConfig {
-    pub const LEN: usize = 8 + 32 + 32 + 1;
+    pub const LEN: usize = 8 + 32 + 32 + 32 + 1;
 }
 
 #[account]

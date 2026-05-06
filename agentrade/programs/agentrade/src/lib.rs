@@ -20,8 +20,23 @@ pub mod agentrade {
     ) -> Result<()> {
         let config = &mut ctx.accounts.config;
         config.oracle = oracle;
+        config.pending_oracle = Pubkey::default();
         config.treasury = treasury;
         config.bump = ctx.bumps.config;
+        Ok(())
+    }
+
+    /// Step 1: current oracle proposes a successor
+    pub fn propose_oracle(ctx: Context<ProposeOracle>, new_oracle: Pubkey) -> Result<()> {
+        ctx.accounts.config.pending_oracle = new_oracle;
+        Ok(())
+    }
+
+    /// Step 2: proposed oracle accepts — completes rotation
+    pub fn accept_oracle(ctx: Context<AcceptOracle>) -> Result<()> {
+        let config = &mut ctx.accounts.config;
+        config.oracle = config.pending_oracle;
+        config.pending_oracle = Pubkey::default();
         Ok(())
     }
 
@@ -128,9 +143,11 @@ pub mod agentrade {
         task.quality_score = quality_score;
 
         let vault_lamports = ctx.accounts.bond_vault.to_account_info().lamports();
+        let bond = task.bond_amount;
+        let reward = task.reward_amount;
 
         if passed {
-            // Release all vault funds to agent
+            // Full pass: agent gets bond + reward
             **ctx.accounts.bond_vault.to_account_info().try_borrow_mut_lamports()? -= vault_lamports;
             **ctx.accounts.agent.to_account_info().try_borrow_mut_lamports()? += vault_lamports;
 
@@ -142,12 +159,27 @@ pub mod agentrade {
                 profile.reliability_score =
                     ((profile.completed_tasks as u64 * 100) / profile.total_tasks as u64) as u8;
             }
+        } else if quality_score >= 50 {
+            // Partial credit (50-99): agent gets bond back + proportional reward, operator gets remainder
+            let agent_reward = (reward as u128 * quality_score as u128 / 100) as u64;
+            let operator_refund = reward - agent_reward;
+
+            **ctx.accounts.bond_vault.to_account_info().try_borrow_mut_lamports()? -= vault_lamports;
+            **ctx.accounts.agent.to_account_info().try_borrow_mut_lamports()? += bond + agent_reward;
+            **ctx.accounts.operator.to_account_info().try_borrow_mut_lamports()? += operator_refund;
+
+            task.status = TaskStatus::Verified;
+
+            let profile = &mut ctx.accounts.agent_profile;
+            profile.completed_tasks += 1;
+            if profile.total_tasks > 0 {
+                profile.reliability_score =
+                    ((profile.completed_tasks as u64 * 100) / profile.total_tasks as u64) as u8;
+            }
         } else {
-            // Slash: bond split 50/50 treasury + operator; reward back to operator
-            let bond = task.bond_amount;
-            let reward = task.reward_amount;
+            // Full slash (<50): bond split 50/50 treasury + operator; reward back to operator
             let half_bond = bond / 2;
-            let other_half = bond - half_bond; // handles odd lamports
+            let other_half = bond - half_bond;
 
             **ctx.accounts.bond_vault.to_account_info().try_borrow_mut_lamports()? -= vault_lamports;
             **ctx.accounts.treasury.to_account_info().try_borrow_mut_lamports()? += half_bond;
@@ -321,4 +353,29 @@ pub struct ClaimExpired<'info> {
     pub bond_vault: Account<'info, BondVault>,
     #[account(mut)]
     pub operator: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct ProposeOracle<'info> {
+    #[account(
+        mut,
+        seeds = [b"program_config"],
+        bump = config.bump,
+        has_one = oracle
+    )]
+    pub config: Account<'info, ProgramConfig>,
+    pub oracle: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct AcceptOracle<'info> {
+    #[account(
+        mut,
+        seeds = [b"program_config"],
+        bump = config.bump,
+    )]
+    pub config: Account<'info, ProgramConfig>,
+    // pending_oracle must sign to accept
+    #[account(address = config.pending_oracle)]
+    pub pending_oracle: Signer<'info>,
 }
