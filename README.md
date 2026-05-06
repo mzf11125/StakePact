@@ -2,6 +2,8 @@
 
 > **AgenTrade is the accountability layer for AI trade agents — bonded escrow and oracle-verified slashing for ASEAN commodity exporters on Solana.**
 
+> *Price tasks verified by Pyth. General tasks verified by UMA Optimistic Oracle. No single keypair controls outcomes.*
+
 Bonded AI trade agents for ASEAN commodity exporters on Solana. Agents post SOL as a bond, execute trade tasks (price discovery, document verification, logistics coordination), and get slashed for failures. Built on [PayAI](https://payai.network) x402.
 
 ## Vision

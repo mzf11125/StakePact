@@ -12,4 +12,13 @@ pub enum AgenTradeError {
     Unauthorized,
     #[msg("Quality score must be between 0 and 100")]
     InvalidScore,
+    #[msg("Pyth price feed account is required for PriceDiscovery tasks")]
+    MissingPythFeed,
+    #[msg("agent_price_usd_cents is required for PriceDiscovery tasks")]
+    MissingAgentPrice,
+    #[msg("Invalid Pyth feed ID")]
+    InvalidPythFeed,
+    #[msg("Pyth price is stale (older than 60 seconds)")]
+    StalePythPrice,
 }
+
